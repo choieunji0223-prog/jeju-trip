@@ -80,7 +80,10 @@
   function saveState() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (e) {}
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // ---------- 헤더 렌더 ----------
@@ -276,6 +279,30 @@
   }
 
   // ---------- 사진 업로드 ----------
+  function resizeImageFile(file, maxSize, quality, callback) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+          var w = Math.max(1, Math.round(img.width * scale));
+          var h = Math.max(1, Math.round(img.height * scale));
+          var canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL("image/jpeg", quality));
+        } catch (err) {
+          callback(e.target.result);
+        }
+      };
+      img.onerror = function () { callback(e.target.result); };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   function bindPhotoUpload() {
     var frame = document.getElementById("photoFrame");
     var input = document.getElementById("photoInput");
@@ -283,13 +310,13 @@
     input.addEventListener("change", function () {
       var file = input.files[0];
       if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        state.photo = e.target.result;
-        saveState();
+      resizeImageFile(file, 700, 0.85, function (dataUrl) {
+        state.photo = dataUrl;
+        var ok = saveState();
         renderHeader();
-      };
-      reader.readAsDataURL(file);
+        showToast(ok ? "사진이 저장되었습니다 ✓" : "저장 공간이 부족해서 사진을 저장하지 못했어요");
+      });
+      input.value = "";
     });
   }
 
@@ -319,8 +346,8 @@
 
     document.getElementById("saveBtn").addEventListener("click", function () {
       if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-      saveState();
-      showToast("저장되었습니다 ✓");
+      var ok = saveState();
+      showToast(ok ? "저장되었습니다 ✓" : "저장 공간이 부족합니다 (사진을 지우거나 줄여보세요)");
     });
   }
 
@@ -330,7 +357,8 @@
     toast.textContent = msg;
     toast.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 1800);
+    var duration = Math.min(4500, Math.max(1800, msg.length * 90));
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, duration);
   }
 
   // ---------- 초기 실행 ----------

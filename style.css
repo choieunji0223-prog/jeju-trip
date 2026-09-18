@@ -361,14 +361,15 @@ body{
   background:var(--navy);
   color:#fff;
   padding:10px 22px;
-  border-radius:999px;
+  border-radius:16px;
   font-size:13px;
   font-weight:700;
   opacity:0;
   pointer-events:none;
   transition:opacity .25s, transform .25s;
   z-index:60;
-  white-space:nowrap;
+  max-width:calc(100vw - 40px);
+  text-align:center;
 }
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 .btn-reset:hover{color:#8a9aa1;}
