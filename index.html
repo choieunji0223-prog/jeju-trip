@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제주 2박 3일</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍊</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ===== 헤더 배너 ===== -->
+  <header class="hero" id="hero">
+    <div class="hero-deco" aria-hidden="true">
+      <span class="deco deco-mountain1">🗻</span>
+      <span class="deco deco-mountain2">⛰️</span>
+      <span class="deco deco-dolphin1">🐬</span>
+      <span class="deco deco-dolphin2">🐬</span>
+      <span class="deco deco-tangerine1">🍊</span>
+      <span class="deco deco-tangerine2">🍊</span>
+      <span class="deco deco-tangerine3">🍊</span>
+      <span class="deco deco-shell1">🐚</span>
+      <span class="deco deco-shell2">🐚</span>
+      <span class="deco deco-flower1">🌸</span>
+      <span class="deco deco-flower2">🌼</span>
+      <span class="deco deco-leaf">🌿</span>
+    </div>
+
+    <div class="hero-left">
+      <div class="badge" contenteditable="true" data-field="badge">진지하세요 🍊</div>
+
+      <p class="eyebrow" contenteditable="true" data-field="eyebrow">OUR JEJU DREAM · 2 NIGHTS 3 DAYS</p>
+      <h1 class="title" contenteditable="true" data-field="title">제주 2박 3일</h1>
+      <p class="dates" contenteditable="true" data-field="dateRange">2026. 10. 18 (일) — 10. 20 (화)</p>
+
+      <div class="info-card">
+        <div class="info-row">
+          <span class="info-icon">🏠</span>
+          <span class="info-label" contenteditable="true" data-field="stayLabel">숙소</span>
+          <span class="info-value" contenteditable="true" data-field="stayValue">서귀포시 강정동 200<br>유승한내들퍼스트오션 112동 1001호</span>
+        </div>
+        <div class="info-row">
+          <span class="info-icon">✈</span>
+          <span class="info-label" contenteditable="true" data-field="flightLabel">귀경편</span>
+          <span class="info-value" contenteditable="true" data-field="flightValue">10/20 (화) 15:55 제주 → 서울</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="photo-wrap">
+        <div class="photo-ring" aria-hidden="true">
+          <span class="ring-item" style="--a:0deg;--fs:26px;">🐚</span>
+          <span class="ring-item" style="--a:33deg;--fs:28px;">🍊</span>
+          <span class="ring-item" style="--a:66deg;--fs:22px;">🌸</span>
+          <span class="ring-item" style="--a:99deg;--fs:26px;">🐬</span>
+          <span class="ring-item" style="--a:132deg;--fs:24px;">🌿</span>
+          <span class="ring-item" style="--a:165deg;--fs:26px;">🐚</span>
+          <span class="ring-item" style="--a:198deg;--fs:28px;">🍊</span>
+          <span class="ring-item" style="--a:231deg;--fs:22px;">🌼</span>
+          <span class="ring-item" style="--a:264deg;--fs:24px;">🌿</span>
+          <span class="ring-item" style="--a:297deg;--fs:26px;">🐚</span>
+          <span class="ring-item" style="--a:330deg;--fs:28px;">🍊</span>
+        </div>
+        <div class="photo-frame" id="photoFrame" title="클릭해서 사진 바꾸기">
+          <img id="photoImg" src="" alt="여행 사진" style="display:none;">
+          <div class="photo-placeholder" id="photoPlaceholder">
+            <span>📷</span>
+            <p>사진을 클릭해서<br>업로드하세요</p>
+          </div>
+        </div>
+      </div>
+      <span class="moai">🗿</span>
+      <input type="file" id="photoInput" accept="image/*" style="display:none;">
+    </div>
+  </header>
+
+  <!-- ===== DAY 섹션들 ===== -->
+  <main id="daysContainer"></main>
+
+  <!-- ===== 새 DAY 추가 ===== -->
+  <div class="add-day-wrap">
+    <button class="btn btn-add-day" id="addDayBtn">+ DAY 추가</button>
+  </div>
+
+  <footer class="page-footer">
+    <p class="footer-msg" contenteditable="true" data-field="footerMsg">즐거운 제주 여행 되세요 🍊</p>
+    <button class="btn-reset" id="resetBtn">기본값으로 초기화</button>
+  </footer>
+
+</div>
+
+<!-- 일정 아이템 템플릿 (JS에서 사용) -->
+<template id="itemTemplate">
+  <div class="item-row" draggable="false">
+    <span class="drag-handle" title="드래그해서 순서 변경">⠿</span>
+    <span class="item-time" contenteditable="true" data-field="time"></span>
+    <span class="item-activity" contenteditable="true" data-field="activity"></span>
+    <span class="item-memo" contenteditable="true" data-field="memo" data-placeholder="메모"></span>
+    <button class="item-delete" title="삭제">×</button>
+  </div>
+</template>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
