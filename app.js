@@ -279,28 +279,55 @@
   }
 
   // ---------- 사진 업로드 ----------
-  function resizeImageFile(file, maxSize, quality, callback) {
+  function fallbackReadAsDataUrl(file, callback) {
     var reader = new FileReader();
-    reader.onload = function (e) {
-      var img = new Image();
-      img.onload = function () {
-        try {
-          var scale = Math.min(1, maxSize / Math.max(img.width, img.height));
-          var w = Math.max(1, Math.round(img.width * scale));
-          var h = Math.max(1, Math.round(img.height * scale));
-          var canvas = document.createElement("canvas");
-          canvas.width = w;
-          canvas.height = h;
-          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-          callback(canvas.toDataURL("image/jpeg", quality));
-        } catch (err) {
-          callback(e.target.result);
-        }
-      };
-      img.onerror = function () { callback(e.target.result); };
-      img.src = e.target.result;
-    };
+    reader.onload = function (e) { callback(e.target.result); };
+    reader.onerror = function () { callback(null); };
     reader.readAsDataURL(file);
+  }
+
+  function resizeImageFile(file, maxSize, quality, callback) {
+    if (typeof URL === "undefined" || !URL.createObjectURL) {
+      fallbackReadAsDataUrl(file, callback);
+      return;
+    }
+    var objectUrl = URL.createObjectURL(file);
+    var img = new Image();
+    var done = false;
+    var timer = setTimeout(function () {
+      if (done) return;
+      done = true;
+      URL.revokeObjectURL(objectUrl);
+      fallbackReadAsDataUrl(file, callback);
+    }, 8000);
+
+    img.onload = function () {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      try {
+        var scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+        var w = Math.max(1, Math.round(img.width * scale));
+        var h = Math.max(1, Math.round(img.height * scale));
+        var canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(objectUrl);
+        callback(canvas.toDataURL("image/jpeg", quality));
+      } catch (err) {
+        URL.revokeObjectURL(objectUrl);
+        fallbackReadAsDataUrl(file, callback);
+      }
+    };
+    img.onerror = function () {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      URL.revokeObjectURL(objectUrl);
+      fallbackReadAsDataUrl(file, callback);
+    };
+    img.src = objectUrl;
   }
 
   function bindPhotoUpload() {
@@ -310,7 +337,12 @@
     input.addEventListener("change", function () {
       var file = input.files[0];
       if (!file) return;
+      showToast("사진 처리 중...");
       resizeImageFile(file, 700, 0.85, function (dataUrl) {
+        if (!dataUrl) {
+          showToast("사진을 읽지 못했어요. 다른 사진으로 시도해보세요");
+          return;
+        }
         state.photo = dataUrl;
         var ok = saveState();
         renderHeader();
