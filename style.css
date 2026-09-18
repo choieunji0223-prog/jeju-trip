@@ -333,6 +333,44 @@ body{
   text-decoration:underline;
   cursor:pointer;
 }
+
+/* ================= SAVE BUTTON / TOAST ================= */
+.btn-save-float{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:var(--orange);
+  color:#fff;
+  border:none;
+  font-weight:800;
+  font-size:14px;
+  padding:14px 22px;
+  border-radius:999px;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(255,157,77,.45);
+  z-index:50;
+}
+.btn-save-float:hover{background:var(--orange-dark);}
+.btn-save-float:active{transform:scale(.96);}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:82px;
+  transform:translateX(-50%) translateY(12px);
+  background:var(--navy);
+  color:#fff;
+  padding:10px 22px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s, transform .25s;
+  z-index:60;
+  white-space:nowrap;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 .btn-reset:hover{color:#8a9aa1;}
 
 /* ================= RESPONSIVE ================= */

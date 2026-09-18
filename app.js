@@ -316,6 +316,21 @@
       renderHeader();
       renderDays();
     });
+
+    document.getElementById("saveBtn").addEventListener("click", function () {
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      saveState();
+      showToast("저장되었습니다 ✓");
+    });
+  }
+
+  var toastTimer = null;
+  function showToast(msg) {
+    var toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 1800);
   }
 
   // ---------- 초기 실행 ----------
